@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Maria</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family: Georgia, serif;
+}
+
+body{
+background:#050505;
+color:white;
+overflow:hidden;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+/* RAIN */
+#rain{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+pointer-events:none;
+}
+
+.drop{
+position:absolute;
+width:2px;
+height:80px;
+background:rgba(255,255,255,0.15);
+animation:fall linear infinite;
+}
+
+@keyframes fall{
+from{transform:translateY(-100px);}
+to{transform:translateY(110vh);}
+}
+
+/* SCREENS */
+.screen{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+opacity:0;
+transition:1s;
+pointer-events:none;
+}
+
+.screen.active{
+opacity:1;
+pointer-events:auto;
+}
+
+h1{
+font-weight:300;
+font-size:2.5rem;
+margin-bottom:20px;
+}
+
+p{
+max-width:700px;
+font-size:1.1rem;
+line-height:2;
+}
+
+/* BUTTON */
+button{
+margin-top:30px;
+padding:10px 25px;
+background:transparent;
+border:1px solid rgba(255,255,255,0.3);
+color:white;
+cursor:pointer;
+}
+
+/* ENVELOPE */
+#envelope{
+font-size:4rem;
+cursor:pointer;
+animation:float 3s ease-in-out infinite;
+}
+
+@keyframes float{
+50%{transform:translateY(-10px);}
+}
+
+/* LETTER */
+#letter{
+display:none;
+max-width:700px;
+}
+
+#finalText{
+opacity:0;
+animation:fadeIn 2s forwards;
+}
+
+@keyframes fadeIn{
+to{opacity:1;}
+}
+
+/* STARS */
+.stars{
+position:fixed;
+width:100%;
+height:100%;
+background:radial-gradient(white 1px,transparent 1px);
+background-size:50px 50px;
+opacity:0.08;
+}
+
+/* FADE */
+.fadeText{
+animation:fadeIn2 2s forwards;
+opacity:0;
+}
+
+@keyframes fadeIn2{
+to{opacity:1;}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="stars"></div>
+<div id="rain"></div>
+
+<!-- SCREEN 1 -->
+<div class="screen active" id="screen1">
+<h1 class="fadeText">Hi Maria.</h1>
+<button onclick="nextScreen(1,2)">Continue</button>
+</div>
+
+<!-- SCREEN 2 -->
+<div class="screen" id="screen2">
+<p id="text2"></p>
+<button id="btn2" style="display:none" onclick="nextScreen(2,3)">Continue</button>
+</div>
+
+<!-- SCREEN 3 -->
+<div class="screen" id="screen3">
+<p id="text3"></p>
+<button id="btn3" style="display:none" onclick="nextScreen(3,4)">Continue</button>
+</div>
+
+<!-- SCREEN 4 -->
+<div class="screen" id="screen4">
+<p id="text4"></p>
+<button id="btn4" style="display:none" onclick="nextScreen(4,5)">Continue</button>
+</div>
+
+<!-- SCREEN 5 -->
+<div class="screen" id="screen5">
+
+<div id="envelope" onclick="openLetter()">
+✉️
+<p style="font-size:1rem; opacity:0.6;">Click to open</p>
+</div>
+
+<div id="letter">
+<h1>Happy Birthday, Maria.</h1>
+<p id="finalText"></p>
+<p style="margin-top:30px; opacity:0.6;">— Imran</p>
+</div>
+
+</div>
+
+<script>
+
+/* RAIN */
+const rain=document.getElementById("rain");
+
+for(let i=0;i<60;i++){
+let drop=document.createElement("div");
+drop.className="drop";
+drop.style.left=Math.random()*100+"vw";
+drop.style.animationDuration=(0.5+Math.random()*1.5)+"s";
+rain.appendChild(drop);
+}
+
+/* TYPEWRITER */
+function typeWriter(el,text,btn){
+let i=0;
+el.innerHTML="";
+btn.style.display="none";
+
+function typing(){
+if(i<text.length){
+el.innerHTML+=text.charAt(i);
+i++;
+setTimeout(typing,55);
+}
+else{
+setTimeout(()=>{
+btn.style.display="inline-block";
+},500);
+}
+}
+typing();
+}
+
+/* NAVIGATION */
+function nextScreen(from,to){
+
+document.getElementById("screen"+from).classList.remove("active");
+
+setTimeout(()=>{
+
+document.getElementById("screen"+to).classList.add("active");
+
+if(to===2){
+typeWriter(text2,"It's your birthday today.",btn2);
+}
+
+if(to===3){
+typeWriter(text3,"I almost convinced myself I wouldn't think about you today.",btn3);
+}
+
+if(to===4){
+typeWriter(text4,"But I did. Just like every year.",btn4);
+}
+
+},500);
+}
+
+/* LETTER */
+function openLetter(){
+document.getElementById("envelope").style.display="none";
+document.getElementById("letter").style.display="block";
+
+typeWriterFinal(document.getElementById("finalText"),
+`We don't talk anymore.
+But I still remember you.
+
+Some people leave quietly,
+but they never really leave the memory.
+
+I hope you're okay.
+I hope you're smiling.
+
+And I hope today feels kind to you.
+
+Happy Birthday.`,
+);
+}
+
+function typeWriterFinal(el,text){
+let i=0;
+el.innerHTML="";
+
+function typing(){
+if(i<text.length){
+el.innerHTML+=text.charAt(i);
+i++;
+setTimeout(typing,45);
+}
+}
+typing();
+}
+
+</script>
+
+</body>
+</html>
